@@ -1,4 +1,5 @@
 <script>
+    // @ts-ignore
     import Example from './example.md';
 </script>
 
