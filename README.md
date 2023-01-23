@@ -151,6 +151,49 @@ Loading prism.js script in <head> section does not work beause the contents are 
 </html>
 ```
 
+### Allow import from external directories
+
+Optionall, you can allow vite to import files outside of `./src` directory. For example, to import markdown file from `./docs`. to do that, add the `allow` option to `./vite.config.js`.
+
+```js
+// ./vite.config.js
+
+const config: UserConfig = {
+    plugins: [sveltekit()],
+    server: {
+        fs: {
+            // Allow serving files from one level up to the project root
+            // docs, ...
+            allow: ['..'],
+        },
+    },
+};
+```
+
+## Deploying to GitHub Pages
+
+To deploy the site to GitHub Pagses, base address should be adjusted because gh-pages address has project name on the site address. This can be address by svelte-kit using `svelte.cnfig.js`.
+
+```js
+// ./svelte.config.js
+import { resolve } from "path";
+const dev = process.env.NODE_ENV === "development";
+
+const config = {
+    // ...
+    kit: {
+        adapter: adapter({
+            pages: "build",
+            assets: "build",
+            fallback: null,
+            precompress: false,
+        }),
+        paths: {
+            base: dev ? "" : "/my-app",
+        },
+    },
+```
+
 ## Developing
 
 Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
