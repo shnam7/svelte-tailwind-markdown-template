@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
     import '../app.postcss';
     import { base } from '$app/paths';
     import { Layout, Header, Container, Sidebar, Content, Footer } from '@components/layout';
@@ -15,12 +15,12 @@
         <div class="mx-auto">
             <h1 class="text-center text-3xl font-bold p-4">Svelte-Tailwind-Markdown Template</h1>
         </div>
-        <div class="block p-2 pr-3.5 border-1 border-red-900">
+        <div class="absolute right-4 top-2 p-2 pr-3.5 border-1 border-red-900">
             <a
-                href="https://github.com/shnam7/ardukit"
+                href="https://github.com/shnam7/svelte-tailwind-markdown-template"
                 target="_blank"
                 rel="noopener noreferrer"
-                class="border-[4px] border-red-800 justify-center"><GitHub /></a
+                class="hover:text-sky-900"><GitHub size={30} /></a
             >
         </div>
     </Header>
