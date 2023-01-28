@@ -10,12 +10,14 @@ This is a template for Svelte project using:
 Options and additional features
 
 -   TypeScript is used as default language
--   [Prism](https://prismjs.com) code highlighting enabled with line numbering option (using temporary workaround).
+-   [Shiki](https://github.com/shikijs/shiki) code highlighting is enabled.
 -   Configured for static website as default (ready for gh-pages)
 
-## Using the template
+## Installation
 
-You can download the template using `degit`, a simplest way.
+### Using the template
+
+You can download the template using `degit`, which is the simplest way.
 
 ```bash
 # install degit if it's not installed yet
@@ -29,9 +31,11 @@ cd my-app
 git init
 ```
 
-## Creating project from scratch
+### Creating project from scratch
 
 You can build the project from scratch in this process.
+
+#### Install core modules
 
 ```bash
 # create svelte project
@@ -76,82 +80,72 @@ If you see any type error messages, then run `check` scrit in package.json. It w
 pnpm run check
 ```
 
-### Enable Markdown
+#### Enable Markdown
 
 Tailwind initializer([preflight](https://tailwindcss.com/docs/preflight)) removes all the markdown styles. So, to use markdown with Tailwind CSS, you have to install [@tailwindcss/typography](https://tailwindcss.com/docs/typography-plugin) plugin to `tailwind.config.js`, and enable it using `prose` style markdown container. We can add this to `./src/routes/+layout.svelte` to enable markdown for whole pages.
 
 ```js
 // # ./tailwind.config.js
 
+const defaultTheme = require('tailwindcss/defaultTheme');
+
 const config = {
-    content: ['./src/**/*.{html,js,svelte,ts}'],
+    content: ['./src/**/*.{html,js,svelte,ts,md}', './docs/**/*.md'],
 
     theme: {
-        extend: {},
+        // ...
     },
 
     plugins: [require('@tailwindcss/typography')],
+    darkMode: 'class',
 };
 ```
 
 ```html
-<div class="prose max-w-none text-gray-900">
+<div class="prose dark:prose-invert max-w-none text-gray-900">
     <div class="max-w-4xl p-4 mx-auto">
         <slot />
     </div>
 </div>
 ```
 
+Markdown files can also be placed in `./docs`, which is outside of root source directory `./src`. In this case, [marked](https://marked.js.org/) is used instead of MDSveX. So, Svelte is not supported there. If you need to uuse Svelte in markdown, then it suould be placed inside of `./src/routes`, or it should be imported by a module that is lacated inside `./src/routes`. Code highlighting is supported in both places.
+
+#### Enable Tailwind CSS
+
 To use Tailwind CSS in markdown files, you need to add paths of markdown files to `content` field in `./tailwind.config.js`.
 
 ```js
 const config = {
-    content: ['./src/**/*.{html,js,svelte,ts,md}'],
+    content: ['./src/**/*.{html,js,svelte,ts,md}', './docs/**/*.md'],
 
     theme: {
         extend: {},
     },
 
     plugins: [require('@tailwindcss/typography')],
+    darkMode: 'class',
 };
 ```
 
-### Enable Prism Code Highlighting
+If you are going to support dark mode options, then add darkMode option as shown in the above example.
+Option value `class` means you can control dark mode using class name `dark`. The other option is `media` whcih is using operating system preference. Defaule alue is `media`. You can check Tailwind CC docment on dark mode [here](https://tailwindcss.com/docs/dark-mode#toggling-dark-mode-manually).
+To use
 
-To use prism code highlighting feature from MDsveX, you need to add prism CSS file. This can be done by `<link ...>` script in html or you can use `<svelte:head>` element.
+#### Enable Code Highlighting
 
-```svelte
-# ./src/routes/+layout.svelte
+Code highlighting is enabled by default. It is using [Shiki](https://github.com/shikijs/shiki). Default theme is `github-dark`, and it can be changed by adding shiki theme configuration to `./package.json`.
 
-<svelte:head>
-    <link rel="stylesheet" href={`${base}/prism/prism.css`} />
-</svelte:head>
+```json
+{
+    // ...
+    "shiki": {
+        "theme": "material-ocean"
+    }
+}
 ```
 
-In this project, 'Tomorrow Night' theme is downloaded as `./static/prism/prism.css` with couple of options including line numbers.
-You can see the option details in this link: [Prism Download](https://prismjs.com/download.html#themes=prism-tomorrow&languages=markup+css+clike+javascript+bash+c+cpp&plugins=line-highlight+line-numbers+show-invisibles+autolinker+wpd+show-language+data-uri-highlight+toolbar+copy-to-clipboard+match-braces):
-
-Loading prism.js script in <head> section does not work beause the contents are loaded later than the prism.js script even with the `defer` attribute. So, as a workaround, script loader is added in `./src/app.html`. `setTimerout()` will make the prism script to run 200ms after page load. 200ms is a heuristic value, which may need to be adjusted later according to the page loading speed.
-
-```html
-<html lang="en">
-    <head>
-        <!-- ... -->
-    </body>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            setTimeout(() => {
-                let tag = document.createElement('script');
-                tag.setAttribute('src', '%sveltekit.assets%/prism/prism.js');
-                tag.setAttribute('defer', 'true');
-                document.getElementsByTagName('head')[0].appendChild(tag);
-            }, 200);
-        });
-    </script>
-</html>
-```
-
-### Allow import from external directories
+#### Allow import from external directories
 
 Optionall, you can allow vite to import files outside of `./src` directory. For example, to import markdown file from `./docs`. to do that, add the `allow` option to `./vite.config.js`.
 
@@ -195,6 +189,8 @@ const config = {
 ```
 
 ## Developing
+
+You can use npm scriptes automatically generated by svelte-kit.
 
 Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
 

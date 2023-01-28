@@ -1,5 +1,8 @@
 import tailwindcss from 'tailwindcss';
 import autoprefixer from 'autoprefixer';
+import cssnano from 'cssnano';
+
+const dev = process.env.NODE_ENV === 'development';
 
 const config = {
     plugins: [
@@ -7,6 +10,7 @@ const config = {
         tailwindcss(),
         //But others, like autoprefixer, need to run after,
         autoprefixer,
+        !dev && cssnano({ preset: 'default' }),
     ],
 };
 

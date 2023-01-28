@@ -10,8 +10,6 @@ const dev = process.env.NODE_ENV === 'development';
 const config = {
     extensions: ['.svelte', ...mdsvexConfig.extensions],
 
-    // Consult https://kit.svelte.dev/docs/integrations#preprocessors
-    // for more information about preprocessors
     preprocess: [vitePreprocess(), preprocess({ postcss: true }), mdsvex(mdsvexConfig)],
 
     kit: {

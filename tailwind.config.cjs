@@ -1,11 +1,18 @@
+const defaultTheme = require('tailwindcss/defaultTheme');
+
 const config = {
-    content: ['./src/**/*.{html,js,svelte,ts,md}'],
+    content: ['./src/**/*.{html,js,svelte,ts,md}', './docs/**/*.md'],
 
     theme: {
-        extend: {},
+        extend: {
+            fontFamily: {
+                sans: ['Inter', '"Nanum Gothic"', ...defaultTheme.fontFamily.sans],
+            },
+        },
     },
 
     plugins: [require('@tailwindcss/typography')],
+    darkMode: 'class',
 };
 
 module.exports = config;
